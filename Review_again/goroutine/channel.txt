@@ -1,0 +1,16 @@
+在 Go 的 channel 中，发送和接收操作是 阻塞的，这意味着：
+
+发送阻塞：当向 channel 发送数据（ch <- value）时，如果没有 Goroutine 准备好从该 channel 接收数据，发送操作会阻塞，直到某个 Goroutine 开始接收。
+接收阻塞：当从 channel 接收数据（value := <-ch）时，如果没有数据可供接收（即没有其他 Goroutine 向该 channel 发送数据），接收操作会阻塞，直到某个 Goroutine 发送了数据。
+这种阻塞特性使得 Goroutines 的同步更加简单，因为数据的发送和接收之间有一个天然的等待关系，无需显式使用锁（如 sync.Mutex）来同步。
+
+阻塞的机制确保了：
+
+数据同步：发送方会等待接收方准备好再继续执行，接收方也会等待数据被发送后再继续执行。
+无需锁机制：通过 channel 的阻塞特性，可以自然地实现 Goroutine 的同步，而不需要显式地使用锁。
+
+Go也允许指定channel的缓冲大小，很简单，就是channel可以存储多少元素。ch:= make(chan bool, 4)，创建了可以存储4个元素的bool 型channel。在这个channel 中，前4个元素可以无阻塞的写入。当写入第5个元素时，代码将会阻塞，直到其他goroutine从channel 中读取一些元素，腾出空间。
+
+缓冲区大小为 1 的 channel。这意味着 channel 中最多只能存储一个数据，超过缓冲区大小时会导致阻塞。
+
+当你尝试发送两个数据到一个缓冲区大小为 1 的 channel 时，程序会在第二次发送数据时阻塞，因为缓冲区已经满，而没有 Goroutine 读取数据。因此会导致 deadlock（死锁）。
