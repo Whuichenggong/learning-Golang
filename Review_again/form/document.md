@@ -41,3 +41,21 @@ Go里面提供了一个time的处理包，我们可以把用户的输入年月�
 ### 判断身份证号码
 
 身份证号码是18位的，我们可以用正则表达式进行判断
+
+# 预防跨站脚本
+
+动态站点会受到一种名为“跨站脚本攻击”（所谓动态 就是为了增强客户体验 攻击者通常会在有漏洞的程序中插入JavaScript、VBScript、 ActiveX或Flash以欺骗用户）
+
+1. 验证所有输入数据
+2. 对所有输出数据进行适当处理
+
+func HTMLEscape(w io.Writer, b []byte) //把b进行转义之后写到w
+func HTMLEscapeString(s string) string //转义s之后返回结果字符串
+func HTMLEscaper(args ...interface{}) string //支持多个参数一起转义，返回结果字符串
+
+转义就是将 HTML 特殊字符（例如 <, >, &, " 等）替换为安全的表示形式（例如 &lt;, &gt;, &amp;, &quot;），使浏览器无法将其解释为代码。
+
+
+---
+
+对于 fruit 和 gender 的值，你简单地用循环匹配。建议将这些列表转换为 map，以提升匹配效率。 把循环换成map提升效率
